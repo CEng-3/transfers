@@ -37,12 +37,12 @@ picam2.configure(config)
 picam2.start()
 
 try:
-    while cap.isOpened():
+    while True:
         frame = picam2.capture_array()
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         
         data = pickle.dumps(frame)
-        message = struct.pact("Q", len(data)) + data
+        message = struct.pack("Q", len(data)) + data
         
         # Send frame over socket
         conn.sendall(message)
