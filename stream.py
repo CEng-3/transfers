@@ -1,3 +1,5 @@
+from picamera2 import Picamera2
+
 import socket
 import pickle
 import struct
@@ -28,16 +30,16 @@ while True:
     print(f"Connection established with {addr}")
     break
 
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+cap = None
+picam2 = Picamera2()
+config = picam2.create_preview_configuration(main={"size": (640, 480)})
+picam2.configure(config)
+picam2.start()
 
 try:
     while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            print("Error: Failed to capture frame.")
-            break
+        frame = picam2.capture_array()
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         
         data = pickle.dumps(frame)
         message = struct.pact("Q", len(data)) + data
