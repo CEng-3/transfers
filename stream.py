@@ -72,7 +72,6 @@ def capture_frames():
         try:
             frame = camera.capture_array()
             frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-            frame = cv2.flip(frame, -1)  # Flip image vertically as in app.py
             
             with frame_lock:
                 current_frame = frame
